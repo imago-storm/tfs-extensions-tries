@@ -99,8 +99,7 @@ var EFClient = (function () {
     EFClient.prototype.publishArtifact = function (path, artifactName, artifactVersion, repositoryName, commanderSessionId) {
         var def = q.defer();
         var form = new FormData();
-        var stream = fs.createReadStream(path);
-        stream.on('error', function (e) {
+        var stream = fs.createReadStream(path).on('error', function (e) {
             console.log("File stream error", e);
             def.reject(e);
         });
@@ -123,8 +122,7 @@ var EFClient = (function () {
             auth: this.username + ':' + this.password,
             protocol: 'https:'
         };
-        var req = form.submit(options);
-        req.on('response', function (res) {
+        var req = form.submit(options).on('response', function (res) {
             res.setEncoding('utf8');
             var responseString = "";
             res.on('data', function (chunk) {
@@ -142,7 +140,6 @@ var EFClient = (function () {
             console.log("Request error", e);
             def.reject(e);
         });
-        req.end();
         return def.promise;
     };
     return EFClient;

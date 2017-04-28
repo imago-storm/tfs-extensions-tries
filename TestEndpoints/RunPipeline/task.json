@@ -1,63 +1,63 @@
 {
-   "inputs" : [
-      {
-         "required" : true,
-         "label" : "Electric Flow service endpoint",
-         "helpMarkDown" : "Select the Electric Flow end point to use.",
-         "defaultValue" : "",
-         "type" : "connectedService:electricFlow",
-         "name" : "electricFlowService"
-      },
-      {
-         "required" : true,
-         "defaultValue" : "",
-         "label" : "Project Name",
-         "helpMarkDown" : "Project name",
-         "type" : "pickList",
-         "name" : "projectName",
-         "properties" : {
-            "EditableOptions" : true
-         }
-      },
-      {
-         "defaultValue" : "",
-         "label" : "Pipeline Name",
-         "required" : true,
-         "helpMarkDown" : "Pipeline name",
-         "name" : "pipelineName",
-         "type" : "string"
-      }
-   ],
-   "author" : "Electric Cloud",
-   "friendlyName" : "Run Electric Flow Pipeline",
-   "groups" : [
-      {
-         "isExpanded" : false,
-         "displayName" : "Advanced",
-         "name" : "advanced"
-      }
-   ],
-   "instanceNameFormat" : "Run Pipeline $(pipelineName) from project $(projectName)",
-   "name" : "run-pipeline",
-   "id" : "0442a599-dd0c-4d8d-b991-ace99fa47424",
    "category" : "Build",
-   "version" : {
-      "Patch" : "69",
-      "Minor" : 1,
-      "Major" : 0
-   },
-   "dataSourceBindings" : [
-      {
-         "target" : "projectName",
-         "dataSourceName" : "ElectricFlowProjects",
-         "endpointId" : "$(electricFlowService)"
-      }
-   ],
-   "helpMarkDown" : "",
    "execution" : {
       "Node" : {
          "target" : "index.js"
       }
    },
-   "description" : "Run Electric Flow pipeline"
+   "inputs" : [
+      {
+         "type" : "connectedService:electricFlow",
+         "name" : "electricFlowService",
+         "label" : "Electric Flow service endpoint",
+         "required" : true,
+         "defaultValue" : "",
+         "helpMarkDown" : "Select the Electric Flow end point to use."
+      },
+      {
+         "name" : "projectName",
+         "properties" : {
+            "EditableOptions" : true
+         },
+         "type" : "pickList",
+         "required" : true,
+         "defaultValue" : "",
+         "label" : "Project Name",
+         "helpMarkDown" : "Project name"
+      },
+      {
+         "label" : "Pipeline Name",
+         "required" : true,
+         "defaultValue" : "",
+         "type" : "string",
+         "name" : "pipelineName",
+         "helpMarkDown" : "Pipeline name"
+      }
+   ],
+   "dataSourceBindings" : [
+      {
+         "endpointId" : "$(electricFlowService)",
+         "dataSourceName" : "ElectricFlowProjects",
+         "target" : "projectName"
+      }
+   ],
+   "id" : "0442a599-dd0c-4d8d-b991-ace99fa47424",
+   "groups" : [
+      {
+         "name" : "advanced",
+         "displayName" : "Advanced",
+         "isExpanded" : false
+      }
+   ],
+   "helpMarkDown" : "",
+   "author" : "Electric Cloud",
+   "friendlyName" : "Run Electric Flow Pipeline",
+   "description" : "Run Electric Flow pipeline",
+   "instanceNameFormat" : "Run Pipeline $(pipelineName) from project $(projectName)",
+   "name" : "run-pipeline",
+   "version" : {
+      "Patch" : "70",
+      "Minor" : 1,
+      "Major" : 0
+   }
 }
