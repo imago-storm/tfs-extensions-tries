@@ -99,7 +99,12 @@ var EFClient = (function () {
     EFClient.prototype.publishArtifact = function (path, artifactName, artifactVersion, repositoryName, commanderSessionId) {
         var def = q.defer();
         var form = new FormData();
-        form.append("files", fs.createReadStream(path));
+        var stream = fs.createReadStream(path);
+        stream.on('error', function (e) {
+            console.log("File stream error", e);
+            def.reject(e);
+        });
+        form.append("files", stream);
         form.append("artifactName", artifactName);
         form.append("artifactVersionVersion", artifactVersion);
         form.append("commanderSessionId", commanderSessionId);
@@ -134,8 +139,10 @@ var EFClient = (function () {
                 }
             });
         }).on('error', function (e) {
+            console.log("Request error", e);
             def.reject(e);
         });
+        req.end();
         return def.promise;
     };
     return EFClient;

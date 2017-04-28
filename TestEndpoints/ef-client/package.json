@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Polina Shubina",
+  "author": "Electric Cloud",
   "license": "ISC",
   "dependencies": {
     "form-data": "^2.1.4",

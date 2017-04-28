@@ -1,5 +1,8 @@
 use strict;
 use warnings;
+use JSON;
+use Data::Dumper;
+
 
 open my $fh, 'vss-extension.json' or die $!;
 my $content = join '' => <$fh>;
@@ -14,16 +17,15 @@ print $fh $content;
 close $fh;
 
 
-open $fh, './BuildTaskFolder/task.json' or die $!;
-$content = join '' => <$fh>;
-close $fh;
+my $vss_extension = decode_json($content);
+my @tasks = grep {$_->{type} eq 'ms.vss-distributed-task.task'} @{$vss_extension->{contributions}};
 
-$content =~ s/"Patch": "$build"/"Patch": "$new_build"/sm;
-open $fh, ">./BuildTaskFolder/task.json" or die $!;
-print $fh $content;
-close $fh;
+my @folders = map {$_->{properties}->{name}} @tasks;
+for (@folders) {
+    build_task($_);
+}
 
-my $account = 'pshubinatest';
+my $account = 'pshubina';
 
 open $fh, '/Users/imago/.tfs_pat' or die $!;
 my $token = <$fh>;
@@ -34,4 +36,21 @@ my $output = `tfx extension publish --manifest-globs vss-extension.json --share-
 print $output;
 
 
+sub build_task {
+    my ($folder) = @_;
 
+
+    open $fh, "./$folder/task.json" or die $!;
+    $content = join '' => <$fh>;
+    close $fh;
+
+    my $task = decode_json($content);
+    $task->{version}->{Patch} = $new_build;
+
+    # $content =~ s/"Patch": "$build"/"Patch": "$new_build"/sm;
+    open $fh, ">./$folder/task.json" or die $!;
+    print $fh JSON->new->utf8->pretty->encode($task);
+    close $fh;
+
+    print "Folder $folder done\n";
+}

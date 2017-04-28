@@ -121,7 +121,12 @@ class EFClient {
     publishArtifact(path: string, artifactName: string, artifactVersion: string, repositoryName: string, commanderSessionId: string) {
         let def = q.defer();
         let form = new FormData();
-        form.append("files", fs.createReadStream(path));
+        let stream = fs.createReadStream(path);
+        stream.on('error', (e) => {
+            console.log("File stream error", e);
+            def.reject(e);
+        });
+        form.append("files", stream);
         form.append("artifactName", artifactName);
         form.append("artifactVersionVersion", artifactVersion);
         form.append("commanderSessionId", commanderSessionId);
@@ -143,7 +148,6 @@ class EFClient {
             protocol: 'https:'
         };
 
-
         let req = form.submit(options);
         req.on('response', (res) => {
             res.setEncoding('utf8');
@@ -160,9 +164,11 @@ class EFClient {
                 }
             });
         }).on('error', (e) => {
+            console.log("Request error", e);
             def.reject(e);
         });
 
+        req.end();
         return def.promise;
     }
 
